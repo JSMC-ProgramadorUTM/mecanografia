@@ -8,6 +8,8 @@ package mecanografia;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JButton;
 import javax.swing.Timer;
 
@@ -20,17 +22,33 @@ public class Teclado extends javax.swing.JFrame {
     private Timer colorTimer;
     private JButton btnPresionado;
     private String oracion = "";
+    private final Pangramas pg = new Pangramas();
+    private String oracion2 = "";
+    private char[] oracionletras;
+    private int index = 0;
+    private int correcto = 0;
+    private int incorrecto = 0;
 
     public Teclado() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setFocusable(true);
         colorTimer = new Timer(80, e -> resetearColor()); // Timer para controlar el parpadeo
+        cargarOracion();
 
     }
 
+    private void cargarOracion() {
+        ArrayList<String> pangramas = pg.getPangramas();
+        int numeroAleatorio = ThreadLocalRandom.current().nextInt(1, 20 + 1);
+        oracion2 = pangramas.get(numeroAleatorio);
+        oracionletras = oracion2.toLowerCase().toCharArray();
+
+        this.lblOracion2.setText(this.lblOracion2.getText() + " " + oracion2);
+    }
+
     private void cambiarColorTemporizado() {
-        btnPresionado.setBackground(Color.RED);
+        btnPresionado.setBackground(Color.GREEN);
         colorTimer.start();
     }
 
@@ -95,6 +113,12 @@ public class Teclado extends javax.swing.JFrame {
         btnControl = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtOracion = new javax.swing.JTextArea();
+        lblOracion2 = new javax.swing.JLabel();
+        lblOracion = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtCorrecto = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtIncorrecto = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -345,7 +369,7 @@ public class Teclado extends javax.swing.JFrame {
                                 .addComponent(btnN)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnM)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(10, 37, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnEnter)
                             .addComponent(btnBorrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -354,7 +378,7 @@ public class Teclado extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -412,7 +436,7 @@ public class Teclado extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEspacio, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnControl, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         txtOracion.setColumns(20);
@@ -422,25 +446,80 @@ public class Teclado extends javax.swing.JFrame {
         txtOracion.setFocusable(false);
         jScrollPane1.setViewportView(txtOracion);
 
+        lblOracion2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblOracion2.setText("ORACION:");
+
+        lblOracion.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        lblOracion.setForeground(new java.awt.Color(255, 51, 51));
+        lblOracion.setText("ESCRIBA LA ORACION INDICADA EN LA PARTE SUPERIOR, NO PRESIONE LAS TECLAS CON EL MOUSE.");
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("CORRECTO:");
+
+        txtCorrecto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtCorrecto.setText("0");
+        txtCorrecto.setEnabled(false);
+        txtCorrecto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCorrectoActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setText("INCORRECTO: ");
+
+        txtIncorrecto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtIncorrecto.setText("0");
+        txtIncorrecto.setEnabled(false);
+        txtIncorrecto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIncorrectoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblOracion2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblOracion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCorrecto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIncorrecto, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(19, 19, 19))
+                .addContainerGap()
+                .addComponent(lblOracion2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCorrecto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtIncorrecto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblOracion, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -449,6 +528,7 @@ public class Teclado extends javax.swing.JFrame {
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
 
         char letra = evt.getKeyChar();
+        char letraSiguiente = oracionletras[index];
 
         if (Character.isLetter(letra) || letra == ' ') {
 
@@ -541,7 +621,7 @@ public class Teclado extends javax.swing.JFrame {
                 btnPresionado = this.btnT;
                 cambiarColorTemporizado();
             }
-            if (letra == 'U' || letra == 'U') {
+            if (letra == 'U' || letra == 'u') {
                 btnPresionado = this.btnU;
                 cambiarColorTemporizado();
             }
@@ -566,9 +646,17 @@ public class Teclado extends javax.swing.JFrame {
                 cambiarColorTemporizado();
             }
 
-            oracion = oracion + letra;
+            if (letra == letraSiguiente) {
+                oracion = oracion + letra;
+                this.txtOracion.setText(oracion.toUpperCase());
+                index += 1;
+                correcto += 1;
+                this.txtCorrecto.setText(String.valueOf(correcto));
+            } else {
+                incorrecto += 1;
+                this.txtIncorrecto.setText(String.valueOf(incorrecto));
+            }
 
-            this.txtOracion.setText(oracion.toUpperCase());
         }
 
 
@@ -581,6 +669,14 @@ public class Teclado extends javax.swing.JFrame {
     private void btnVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnVActionPerformed
+
+    private void txtCorrectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorrectoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCorrectoActionPerformed
+
+    private void txtIncorrectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIncorrectoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIncorrectoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -662,8 +758,14 @@ public class Teclado extends javax.swing.JFrame {
     private javax.swing.JButton btnY;
     private javax.swing.JButton btnZ;
     private javax.swing.JButton btnÑ;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblOracion;
+    private javax.swing.JLabel lblOracion2;
+    private javax.swing.JTextField txtCorrecto;
+    private javax.swing.JTextField txtIncorrecto;
     private javax.swing.JTextArea txtOracion;
     // End of variables declaration//GEN-END:variables
 }

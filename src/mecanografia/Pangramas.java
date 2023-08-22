@@ -41,4 +41,8 @@ public class Pangramas {
         }
     }
 
+    public ArrayList<String> getPangramas() {
+        return pangramas;
+    }
+
 }
