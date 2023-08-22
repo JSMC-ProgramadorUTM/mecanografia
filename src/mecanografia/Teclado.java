@@ -9,8 +9,11 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 /**
@@ -28,6 +31,7 @@ public class Teclado extends javax.swing.JFrame {
     private int index = 0;
     private int correcto = 0;
     private int incorrecto = 0;
+    private Map<String, Integer> errores = new HashMap<>();
 
     public Teclado() {
         initComponents();
@@ -451,7 +455,7 @@ public class Teclado extends javax.swing.JFrame {
 
         lblOracion.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
         lblOracion.setForeground(new java.awt.Color(255, 51, 51));
-        lblOracion.setText("ESCRIBA LA ORACION INDICADA EN LA PARTE SUPERIOR, NO PRESIONE LAS TECLAS CON EL MOUSE.");
+        lblOracion.setText("ESCRIBA LA ORACION INDICADA EN LA PARTE SUPERIOR, NO PRESIONE LAS TECLAS CON EL MOUSE, NO USE MAYUSCULAS.");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("CORRECTO:");
@@ -652,9 +656,27 @@ public class Teclado extends javax.swing.JFrame {
                 index += 1;
                 correcto += 1;
                 this.txtCorrecto.setText(String.valueOf(correcto));
+
+                if (correcto == oracionletras.length) {
+                    System.out.println(errores);
+                    String data = "CORRECTAS: " + correcto + "\n"
+                            + "INCORRECTAS: " + incorrecto + "\n"
+                            + errores;
+
+                    JOptionPane.showMessageDialog(null, data);
+
+                    dispose();
+                }
+
             } else {
                 incorrecto += 1;
                 this.txtIncorrecto.setText(String.valueOf(incorrecto));
+
+                if (errores.containsKey(String.valueOf(letraSiguiente))) {
+                    errores.put(String.valueOf(letraSiguiente), errores.get(String.valueOf(letraSiguiente)) + 1);
+                } else {
+                    errores.put(String.valueOf(letraSiguiente), 1);
+                }
             }
 
         }
