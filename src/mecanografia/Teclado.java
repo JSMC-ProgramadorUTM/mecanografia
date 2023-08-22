@@ -456,7 +456,7 @@ public class Teclado extends javax.swing.JFrame {
                 btnPresionado = this.btnEspacio;
                 cambiarColorTemporizado();
             }
-            
+
             if (letra == 'A' || letra == 'a') {
                 btnPresionado = this.btnA;
                 cambiarColorTemporizado();
